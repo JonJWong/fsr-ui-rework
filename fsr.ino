@@ -1,3 +1,22 @@
+#include <Joystick.h>
+Joystick_ Joystick (
+    0x03,
+    JOYSTICK_TYPE_JOYSTICK,
+    4,
+    2,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+);
+
 #include <inttypes.h>
 
 #if !defined(__AVR_ATmega32U4__) && !defined(__AVR_ATmega328P__) && \
@@ -27,16 +46,16 @@
     Joystick.button(button_num, 0);
   }
 #else
-  #include <Keyboard.h>
+  #include <Joystick.h>
   // And the Keyboard library for Arduino
   void ButtonStart() {
-    Keyboard.begin();
+    Joystick.begin();
   }
   void ButtonPress(uint8_t button_num) {
-    Keyboard.press('a' + button_num - 1);
+    Joystick.pressButton(button_num - 1);
   }
   void ButtonRelease(uint8_t button_num) {
-    Keyboard.release('a' + button_num - 1);
+    Joystick.releaseButton(button_num - 1);
   }
 #endif
 
@@ -60,7 +79,7 @@ uint8_t curButtonNum = 1;
 // some existing sensor pins so if you see some weird behavior it might be
 // because of this. Uncomment the following line to enable the feature.
 
-// #define ENABLE_LIGHTS
+ #define ENABLE_LIGHTS
 
 // We don't want to use digital pins 0 and 1 as they're needed for Serial
 // communication so we start curLightPin from 2.
@@ -161,7 +180,7 @@ class SensorState {
         #if defined(ENABLE_LIGHTS)
         kLightsPin(curLightPin++),
         #endif
-        buttonNum(curButtonNum++) {
+        kButtonNum(curButtonNum++) {
     for (size_t i = 0; i < kMaxSharedSensors; ++i) {
       sensor_ids_[i] = 0;
       individual_states_[i] = SensorState::OFF;
@@ -169,14 +188,6 @@ class SensorState {
     #if defined(ENABLE_LIGHTS)
       pinMode(kLightsPin, OUTPUT);
     #endif
-  }
-
-  void Init() {
-    if (initialized_) {
-      return;
-    }
-    buttonNum = curButtonNum++;
-    initialized_ = true;
   }
 
   // Adds a new sensor to share this state with. If we try adding a sensor that
@@ -191,9 +202,6 @@ class SensorState {
   void EvaluateSensor(uint8_t sensor_id,
                       int16_t cur_value,
                       int16_t user_threshold) {
-    if (!initialized_) {
-      return;
-    }
     size_t sensor_index = GetIndexForSensor(sensor_id);
 
     // The sensor we're evaluating is not part of this shared state.
@@ -229,7 +237,7 @@ class SensorState {
               }
             }
             if (turn_on) {
-              ButtonPress(buttonNum);
+              ButtonPress(kButtonNum);
               combined_state_ = SensorState::ON;
               #if defined(ENABLE_LIGHTS)
                 digitalWrite(kLightsPin, HIGH);
@@ -248,7 +256,7 @@ class SensorState {
               }
             }
             if (turn_off) {
-              ButtonRelease(buttonNum);
+              ButtonRelease(kButtonNum);
               combined_state_ = SensorState::OFF;
               #if defined(ENABLE_LIGHTS)
                 digitalWrite(kLightsPin, LOW);
@@ -272,9 +280,6 @@ class SensorState {
   }
 
  private:
-  // Ensures that Init() has been called at exactly once on this SensorState.
-  bool initialized_;
-
   // The collection of sensors shared with this state.
   uint8_t sensor_ids_[kMaxSharedSensors];
   // The number of sensors this state combines with.
@@ -299,8 +304,7 @@ class SensorState {
   #endif
 
   // The button number this state corresponds to.
-  // Set once in Init().
-  uint8_t buttonNum;
+  const uint8_t kButtonNum;
 };
 
 /*===========================================================================*/
@@ -339,11 +343,6 @@ class Sensor {
       // If this sensor created the state, then it's in charge of deleting it.
       should_delete_state_ = true;
     }
-
-    // Initialize the sensor state.
-    // This sets the button number corresponding to the sensor state.
-    // Trying to re-initialize a sensor_state_ is a no-op, so no harm in 
-    sensor_state_->Init();
 
     // If this sensor hasn't been added to the state, then try adding it.
     if (sensor_state_->GetIndexForSensor(sensor_id) == SIZE_MAX) {
@@ -456,11 +455,14 @@ class Sensor {
 //   Sensor(A4),
 // };
 
+SensorState state1, state2;
 Sensor kSensors[] = {
   Sensor(A0),
-  Sensor(A1),
-  Sensor(A2),
-  Sensor(A3),
+  Sensor(A1, &state1),
+  Sensor(A2, &state1),
+  Sensor(A4, &state2),
+  Sensor(A3, &state2),
+  Sensor(A5),
 };
 const size_t kNumSensors = sizeof(kSensors)/sizeof(Sensor);
 
