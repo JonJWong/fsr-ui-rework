@@ -4,7 +4,8 @@ Join the ![Discord](https://img.shields.io/discord/778312862425939998?color=5865
 
 ## Requirements
 - A [Teensy](https://www.pjrc.com/store/index.html) or Arduino
-  - uses native keyboard library for Arduino and Joystick library for Teensy
+  - uses [Joystick](https://github.com/MHeironimus/ArduinoJoystickLibrary) for Arduino and Joystick library for Teensy
+  - install joystick library in `Documents/Arduino/libraries/` on windows
 - Python 3.7 - 3.10 (3.11 does not work)
     - virtualenv
 - Node 12-16 (Node 18 does not work)
