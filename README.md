@@ -6,7 +6,7 @@ Join the ![Discord](https://img.shields.io/discord/778312862425939998?color=5865
 - A [Teensy](https://www.pjrc.com/store/index.html) or Arduino
   - uses [Joystick](https://github.com/MHeironimus/ArduinoJoystickLibrary) for Arduino and Joystick library for Teensy
   - install joystick library in `Documents/Arduino/libraries/` on windows
-- Python 3.7 - 3.10 (3.11 does not work)
+- Python 3.7 - 3.10 (3.11 does not work, 3.10 confirmed working)
     - virtualenv
 - Node 12-16 (Node 18 does not work)
   - yarn
