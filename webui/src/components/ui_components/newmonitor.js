@@ -195,8 +195,7 @@ const NewMonitor = (props) => {
         grd.addColorStop(1, "#df7116");
       } else {
         grd.addColorStop(0, "#6a00fc");
-        grd.addColorStop(.5, "limegreen");
-	grd.addColorStop(1, "blue");
+	grd.addColorStop(1, "navy");
       }
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
