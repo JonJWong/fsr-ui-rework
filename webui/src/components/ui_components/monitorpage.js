@@ -6,7 +6,7 @@ import NewMonitor from "./newmonitor";
 const MonitorPage = (props) => {
   const { numSensors, emit, webUIDataRef, maxSize, deviceType } = props;
   const INDEX_TO_DIR = {};
-  const [clickEnabled, setClickEnabled] = useState(true);
+  const [clickEnabled, setClickEnabled] = useState(false);
 
   if (numSensors === 4) {
     INDEX_TO_DIR['0'] = "L";
