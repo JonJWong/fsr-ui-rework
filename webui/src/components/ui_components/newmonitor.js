@@ -191,11 +191,12 @@ const NewMonitor = (props) => {
         canvas.height
       );
       if (currentValue >= curThresholds[index]) {
-        grd.addColorStop(0, "lightblue");
-        grd.addColorStop(1, "blue");
+        grd.addColorStop(0, "cyan");
+        grd.addColorStop(1, "#df7116");
       } else {
-        grd.addColorStop(0, "lightblue");
-        grd.addColorStop(1, "gray");
+        grd.addColorStop(0, "#6a00fc");
+        grd.addColorStop(.5, "limegreen");
+	grd.addColorStop(1, "blue");
       }
       ctx.fillStyle = grd;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -214,8 +215,11 @@ const NewMonitor = (props) => {
         canvas.width / 2,
         position
       );
-      grd.addColorStop(0, "orange");
-      grd.addColorStop(1, "red");
+      grd.addColorStop(0, "#6a00fc");
+      grd.addColorStop(.25, "#ff0e93");
+      grd.addColorStop(.5, "#ffa10c");
+      grd.addColorStop(.75, "#ff4360");
+      grd.addColorStop(1, "#ff059d");
       ctx.fillStyle = grd;
       ctx.fillRect(canvas.width / 4, position, canvas.width / 2, canvas.height);
 
