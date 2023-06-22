@@ -19,8 +19,8 @@ from aiohttp.web import json_response
 logger = logging.getLogger(__name__)
 
 # Edit this to match the serial port name shown in Arduino IDE
-SERIAL_PORT = '/dev/cu.usbmodemHIDDI1'
-HTTP_PORT = 5050
+SERIAL_PORT = 'COM3'
+HTTP_PORT = 5000
 
 # Used for developmental purposes. Set this to true when you just want to
 # emulate the serial device instead of actually connecting to one.
