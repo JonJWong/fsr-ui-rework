@@ -1,32 +1,36 @@
 import React from "react";
-
-import Row from "react-bootstrap/Row";
+import { useState } from "react";
 
 import NewMonitor from "./newmonitor";
 
 const MonitorPage = (props) => {
   const { numSensors, emit, webUIDataRef, maxSize, deviceType } = props;
-  const INDEX_TO_DIR = {}
+  const INDEX_TO_DIR = {};
+  const [clickEnabled, setClickEnabled] = useState(true);
 
   if (numSensors === 4) {
-    INDEX_TO_DIR['0'] = "LEFT";
-    INDEX_TO_DIR['1'] = "DOWN";
-    INDEX_TO_DIR['2'] = "UP";
-    INDEX_TO_DIR['3'] = "RIGHT";
+    INDEX_TO_DIR['0'] = "L";
+    INDEX_TO_DIR['1'] = "D";
+    INDEX_TO_DIR['2'] = "U";
+    INDEX_TO_DIR['3'] = "R";
   } else if (numSensors === 6) {
-    INDEX_TO_DIR['0'] = "LEFT";
-    INDEX_TO_DIR['1'] = "DOWN (L)";
-    INDEX_TO_DIR['2'] = "DOWN (R)";
-    INDEX_TO_DIR['3'] = "UP (L)";
-    INDEX_TO_DIR['4'] = "UP (R)";
-    INDEX_TO_DIR['5'] = "RIGHT";
+    INDEX_TO_DIR['0'] = "L";
+    INDEX_TO_DIR['1'] = "D (L)";
+    INDEX_TO_DIR['2'] = "D (R)";
+    INDEX_TO_DIR['3'] = "U (L)";
+    INDEX_TO_DIR['4'] = "U (R)";
+    INDEX_TO_DIR['5'] = "R";
   }
 
   return (
     <header className="App-header">
-      <Row className="monitor-row">
+      {deviceType === "Desktop" && <div className="click-wrapper"><button onClick={() => setClickEnabled(prev => !prev)}>
+        {clickEnabled ? "Disable Click Input" : "Enable Click Input"}
+      </button></div>}
+      <section className="monitor-row">
         {[...Array(numSensors).keys()].map((index) => (
           <NewMonitor
+            key={index}
             deviceType={deviceType}
             dir={INDEX_TO_DIR[index] ? INDEX_TO_DIR[index] : index}
             emit={emit}
@@ -34,9 +38,10 @@ const MonitorPage = (props) => {
             webUIDataRef={webUIDataRef}
             maxSize={maxSize}
             even={numSensors % 2 === 0}
+            clickEnabled={clickEnabled}
           />
         ))}
-      </Row>
+      </section>
     </header>
   );
 };
